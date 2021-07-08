@@ -1,0 +1,3 @@
+[submodule "thirdparty/mugglec"]
+	path = thirdparty/mugglec
+	url = https://github.com/MuggleWei/mugglec.git

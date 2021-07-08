@@ -1,0 +1,17 @@
+# cmake directory
+build/
+
+# vim
+*~
+/compile_commands.json
+*.swp
+
+# vscode
+.vscode/
+
+# clangd
+.clangd/
+.cache/
+
+# doxygen
+/doxy
