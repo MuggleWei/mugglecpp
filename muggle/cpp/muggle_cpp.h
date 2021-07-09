@@ -22,5 +22,6 @@
 
 // memory
 #include "muggle/cpp/memory/memory_pool.hpp"
+#include "muggle/cpp/memory/threadsafe_memory_pool.hpp"
 
 #endif /* ifndef MUGGLE_CPP_H_ */

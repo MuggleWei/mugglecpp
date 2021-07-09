@@ -1,31 +1,29 @@
 /******************************************************************************
- *  @file         memory_pool.h
+ *  @file         threadsafe_memory_pool.hpp
  *  @author       Muggle Wei
  *  @email        mugglewei@gmail.com
  *  @date         2021-07-08
  *  @copyright    Copyright 2021 Muggle Wei
  *  @license      MIT License
- *  @brief        mugglecpp memory pool
+ *  @brief        mugglecpp threadsafe memory pool
  *****************************************************************************/
 
-#ifndef MUGGLE_CPP_MEMORY_POOL_H_
-#define MUGGLE_CPP_MEMORY_POOL_H_
+#ifndef MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_
+#define MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_
 
 #include <stdexcept>
 #include <utility>
 
 #include "muggle/cpp/base/macro.h"
-#include "muggle/c/memory/memory_pool.h"
+#include "muggle/c/memory/threadsafe_memory_pool.h"
 
 NS_MUGGLE_BEGIN
 
 /**
- * @brief mugglecpp memory pool
- *
- * NOTE: this memory pool is not threadsafe
+ * @brief  mugglecpp threadsafe memory pool
  */
 template<typename T>
-class MemoryPool
+class ThreadSafeMemoryPool
 {
 public:
 	/**
@@ -34,25 +32,20 @@ public:
 	 * @param capacity   intialize capacity of memory pool
 	 * @param const_cap  use constant capacity
 	 */
-	MemoryPool(unsigned int capacity=8, bool const_cap = true)
+	ThreadSafeMemoryPool(muggle_atomic_int capacity)
 	{
-		if (!muggle_memory_pool_init(&pool_, capacity, (unsigned int)sizeof(T)))
+		if (muggle_ts_memory_pool_init(&pool_, capacity, (muggle_atomic_int)sizeof(T)) != 0)
 		{
 			throw std::runtime_error("failed init memory pool");
-		}
-
-		if (const_cap)
-		{
-			muggle_memory_pool_set_flag(&pool_, MUGGLE_MEMORY_POOL_CONSTANT_SIZE);
 		}
 	}
 
 	/**
 	 * @brief destructor
 	 */
-	virtual ~MemoryPool()
+	virtual ~ThreadSafeMemoryPool()
 	{
-		muggle_memory_pool_destroy(&pool_);
+		muggle_ts_memory_pool_destroy(&pool_);
 	}
 
 	/**
@@ -62,7 +55,7 @@ public:
 	 */
 	void* Allocate()
 	{
-		return muggle_memory_pool_alloc(&pool_);
+		return muggle_ts_memory_pool_alloc(&pool_);
 	}
 
 	/**
@@ -72,7 +65,7 @@ public:
 	 */
 	void Recycle(void *p_data)
 	{
-		muggle_memory_pool_free(&pool_, p_data);
+		muggle_ts_memory_pool_free(p_data);
 	}
 
 	/**
@@ -105,30 +98,10 @@ public:
 		this->Recycle(p);
 	}
 
-	/**
-	 * @brief capacity of memory pool
-	 *
-	 * @return capacity of memory pool
-	 */
-	unsigned int Capacity()
-	{
-		return this->pool_.capacity;
-	}
-
-	/**
-	 * @brief already allocated number
-	 *
-	 * @return already allocated number
-	 */
-	unsigned int Used()
-	{
-		return this->pool_.used;
-	}
-
 private:
-	muggle_memory_pool_t pool_;
+	muggle_ts_memory_pool_t pool_;
 };
 
 NS_MUGGLE_END
 
-#endif /* ifndef MUGGLE_CPP_MEMORY_POOL_H_ */
+#endif /* ifndef MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_ */

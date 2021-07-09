@@ -27,7 +27,7 @@ public:
 private:
 	unsigned int i_;
 };
-static_assert(std::is_trivial<Bar>::value == false, "Foo need trivial class");
+static_assert(std::is_trivial<Bar>::value == false, "Bar need trivial class");
 
 void example_default()
 {
