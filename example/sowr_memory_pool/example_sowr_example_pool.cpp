@@ -53,11 +53,8 @@ void example_trivial()
 
 	muggle_atomic_int cap = 4096;
 	std::atomic_int cnt(0);
-	muggle::ThreadSafeMemoryPool<Foo> pool(cap);
+	muggle::SowrMemoryPool<Foo> pool(cap);
 	Foo **arr = (Foo**)malloc(sizeof(Foo*) * cap);
-
-	int cnt_array[4];
-	memset(cnt_array, 0, sizeof(int) * 4);
 
 	std::function<void(int)> f = [&](int i){
 		int thread_idx = i;
@@ -73,31 +70,12 @@ void example_trivial()
 			foo->i = cnt++;
 
 			arr[foo->i] = foo;
-			cnt_array[foo->thread_idx]++;
 		}
 	};
 	std::thread t1(f, 0);
-	std::thread t2(f, 1);
-	std::thread t3(f, 2);
-	std::thread t4(f, 3);
-
 	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
 
-	LOG_INFO("thread #1 allocate %d", cnt_array[0]);
-	LOG_INFO("thread #2 allocate %d", cnt_array[1]);
-	LOG_INFO("thread #3 allocate %d", cnt_array[2]);
-	LOG_INFO("thread #4 allocate %d", cnt_array[3]);
 	LOG_INFO("cnt %d", cnt.load());
-
-	int total_cnt = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		total_cnt += cnt_array[i];
-	}
-	LOG_INFO("total cnt: %d", total_cnt);
 
 	// recycle all allocated memory space
 	for (int i = 0; i < cnt; i++)
@@ -117,11 +95,8 @@ void example_non_trivial()
 
 	muggle_atomic_int cap = 4096;
 	std::atomic_int cnt(0);
-	muggle::ThreadSafeMemoryPool<Bar> pool(cap);
+	muggle::SowrMemoryPool<Bar> pool(cap);
 	Bar **arr = (Bar**)malloc(sizeof(Bar*) * cap);
-
-	int cnt_array[4];
-	memset(cnt_array, 0, sizeof(int) * 4);
 
 	std::function<void(int)> f = [&](int i){
 		int thread_idx = i;
@@ -135,31 +110,12 @@ void example_non_trivial()
 			bar->SetIndex(cnt++);
 
 			arr[bar->Index()] = bar;
-			cnt_array[bar->ThreadIdx()]++;
 		}
 	};
 	std::thread t1(f, 0);
-	std::thread t2(f, 1);
-	std::thread t3(f, 2);
-	std::thread t4(f, 3);
-
 	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
 
-	LOG_INFO("thread #1 allocate %d", cnt_array[0]);
-	LOG_INFO("thread #2 allocate %d", cnt_array[1]);
-	LOG_INFO("thread #3 allocate %d", cnt_array[2]);
-	LOG_INFO("thread #4 allocate %d", cnt_array[3]);
 	LOG_INFO("cnt %d", cnt.load());
-
-	int total_cnt = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		total_cnt += cnt_array[i];
-	}
-	LOG_INFO("total cnt: %d", total_cnt);
 
 	// recycle all allocated memory space
 	for (int i = 0; i < cnt; i++)
@@ -181,7 +137,7 @@ void example_non_trivial()
 
 int main()
 {
-	muggle::Log::SimpleInit(LOG_LEVEL_INFO, "log/example_threadsafe_memory_pool.log", LOG_LEVEL_TRACE);
+	muggle::Log::SimpleInit(LOG_LEVEL_INFO, "log/example_sowr_memory_pool.log", LOG_LEVEL_INFO);
 
 	example_trivial();
 	example_non_trivial();

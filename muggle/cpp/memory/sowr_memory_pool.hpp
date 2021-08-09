@@ -1,41 +1,40 @@
 /******************************************************************************
- *  @file         threadsafe_memory_pool.hpp
+ *  @file         sowr_memory_pool.hpp
  *  @author       Muggle Wei
  *  @email        mugglewei@gmail.com
- *  @date         2021-07-08
+ *  @date         2021-08-09
  *  @copyright    Copyright 2021 Muggle Wei
  *  @license      MIT License
- *  @brief        mugglecpp threadsafe memory pool
+ *  @brief        mugglecpp sowr memory pool
  *****************************************************************************/
 
-#ifndef MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_
-#define MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_
+#ifndef MUGGLE_CPP_SOWR_MEMORY_POOL_H_
+#define MUGGLE_CPP_SOWR_MEMORY_POOL_H_
 
 #include <stdexcept>
 #include <utility>
 
-#include "muggle/c/memory/threadsafe_memory_pool.h"
+#include "muggle/c/memory/sowr_memory_pool.h"
 #include "muggle/cpp/base/macro.h"
 #include "muggle/cpp/memory/interface_memory_pool.hpp"
 
 NS_MUGGLE_BEGIN
 
 /**
- * @brief  mugglecpp threadsafe memory pool
+ * @brief memory pool for sequential only one writer and only one reader
  */
 template<typename T>
-class ThreadSafeMemoryPool : public IMemoryPool<T>
+class SowrMemoryPool : public IMemoryPool<T>
 {
 public:
 	/**
 	 * @brief memory pool constructor
 	 *
-	 * @param capacity   intialize capacity of memory pool
-	 * @param const_cap  use constant capacity
+	 * @param capacity
 	 */
-	ThreadSafeMemoryPool(muggle_atomic_int capacity)
+	SowrMemoryPool(muggle_atomic_int capacity)
 	{
-		if (muggle_ts_memory_pool_init(&pool_, capacity, (muggle_atomic_int)sizeof(T)) != 0)
+		if (muggle_sowr_memory_pool_init(&pool_, capacity, sizeof(T)) != 0)
 		{
 			throw std::runtime_error("failed init memory pool");
 		}
@@ -44,9 +43,9 @@ public:
 	/**
 	 * @brief destructor
 	 */
-	virtual ~ThreadSafeMemoryPool()
+	virtual ~SowrMemoryPool()
 	{
-		muggle_ts_memory_pool_destroy(&pool_);
+		muggle_sowr_memory_pool_destroy(&pool_);
 	}
 
 	/**
@@ -56,7 +55,7 @@ public:
 	 */
 	virtual void* Allocate() override
 	{
-		return muggle_ts_memory_pool_alloc(&pool_);
+		return muggle_sowr_memory_pool_alloc(&pool_);
 	}
 
 	/**
@@ -66,13 +65,13 @@ public:
 	 */
 	virtual void Recycle(void *p_data) override
 	{
-		muggle_ts_memory_pool_free(p_data);
+		muggle_sowr_memory_pool_free(p_data);
 	}
 
 private:
-	muggle_ts_memory_pool_t pool_;
+	muggle_sowr_memory_pool_t pool_;
 };
 
 NS_MUGGLE_END
 
-#endif /* ifndef MUGGLE_CPP_THREADSAFE_MEMORY_POOL_H_ */
+#endif /* ifndef MUGGLE_CPP_SOWR_MEMORY_POOL_H_ */
