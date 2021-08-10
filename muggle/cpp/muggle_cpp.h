@@ -34,4 +34,9 @@
 #include "muggle/cpp/sync/channel.h"
 #include "muggle/cpp/sync/ring_buffer.h"
 
+// net
+#include "muggle/cpp/net/socket_peer.h"
+#include "muggle/cpp/net/socket_handle.h"
+#include "muggle/cpp/net/tcp_client.h"
+
 #endif /* ifndef MUGGLE_CPP_H_ */
