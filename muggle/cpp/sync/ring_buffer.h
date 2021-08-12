@@ -14,12 +14,11 @@
 #include "muggle/c/sync/ring_buffer.h"
 #include "muggle/c/base/atomic.h"
 #include "muggle/cpp/base/macro.h"
-#include "muggle/cpp/sync/pipe.h"
 #include <stdint.h>
 
 NS_MUGGLE_BEGIN
 
-class RingBuffer : public Pipe
+class RingBuffer
 {
 public:
 	/**
@@ -38,7 +37,7 @@ public:
 	virtual ~RingBuffer();
 
 	/**
-	 * @brief push data into ring buffer
+	 * @brief write data into ring buffer
 	 *
 	 * @param data  data pointer
 	 *
@@ -47,19 +46,20 @@ public:
 	 *     - on failed, return error code in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual int push(void *data) override;
+	virtual int write(void *data);
 
 	/**
 	 * @brief read data from ring buffer
 	 *
+	 * @param idx   index of data
+	 *
 	 * @return data pointer
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual void* read() override;
+	virtual void* read(muggle_atomic_int idx);
 
 private:
 	muggle_ring_buffer_t ring_buf_;
-	muggle_atomic_int    cursor_;
 };
 
 NS_MUGGLE_END

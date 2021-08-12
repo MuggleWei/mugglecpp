@@ -13,12 +13,11 @@
 
 #include "muggle/c/sync/channel.h"
 #include "muggle/cpp/base/macro.h"
-#include "muggle/cpp/sync/pipe.h"
 #include <stdint.h>
 
 NS_MUGGLE_BEGIN
 
-class Channel : public Pipe
+class Channel
 {
 public:
 	/**
@@ -37,7 +36,7 @@ public:
 	virtual ~Channel();
 
 	/**
-	 * @brief push data into channel
+	 * @brief write data into channel
 	 *
 	 * @param data  data pointer
 	 *
@@ -46,7 +45,7 @@ public:
 	 *     - on failed, return error code in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual int push(void *data) override;
+	virtual int write(void *data);
 
 	/**
 	 * @brief read data from channel
@@ -54,7 +53,7 @@ public:
 	 * @return data pointer
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual void* read() override;
+	virtual void* read();
 
 private:
 	muggle_channel_t channel_;

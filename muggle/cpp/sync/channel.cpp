@@ -16,7 +16,7 @@ Channel::~Channel()
 	muggle_channel_destroy(&channel_);
 }
 
-int Channel::push(void *data)
+int Channel::write(void *data)
 {
 	return muggle_channel_write(&channel_, data);
 }

@@ -10,7 +10,7 @@ struct Foo
 
 #define NUM_THREAD 4
 
-void run(muggle::Pipe *pipe)
+void run(muggle::Channel *chan)
 {
 	int cnt_arr[NUM_THREAD];
 	memset(cnt_arr, 0, sizeof(cnt_arr));
@@ -22,7 +22,7 @@ void run(muggle::Pipe *pipe)
 			foo->thread_idx = thread_id;
 			foo->i = i;
 
-			int ret = pipe->push((void*)foo);
+			int ret = chan->write((void*)foo);
 			if (ret != 0)
 			{
 				LOG_WARNING(
@@ -36,7 +36,7 @@ void run(muggle::Pipe *pipe)
 	std::function<void()> consumer = [&]() {
 		while (1)
 		{
-			Foo *foo = (Foo*)pipe->read();
+			Foo *foo = (Foo*)chan->read();
 			if (foo == nullptr)
 			{
 				break;
@@ -58,7 +58,7 @@ void run(muggle::Pipe *pipe)
 	p2.join();
 	p3.join();
 
-	pipe->push(nullptr);
+	chan->write(nullptr);
 	c0.join();
 
 	for (int i = 0; i < NUM_THREAD; i++)
@@ -71,17 +71,9 @@ int main()
 {
 	muggle::Log::SimpleInit(LOG_LEVEL_WARNING, "log/example_channel.log", LOG_LEVEL_INFO);
 
-	muggle::Pipe *pipe = nullptr;
-
-	muggle::Channel channel(512, 0);
-	pipe = &channel;
+	muggle::Channel chan(512, 0);
 	LOG_INFO("run channel");
-	run(pipe);
-
-	muggle::RingBuffer ring_buf(512, 0);
-	pipe = &ring_buf;
-	LOG_INFO("run ring buffer");
-	run(pipe);
+	run(&chan);
 
 	return 0;
 }

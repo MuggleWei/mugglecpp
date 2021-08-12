@@ -30,7 +30,6 @@
 #include "muggle/cpp/memory/sowr_memory_pool.hpp"
 
 // sync
-#include "muggle/cpp/sync/pipe.h"
 #include "muggle/cpp/sync/channel.h"
 #include "muggle/cpp/sync/ring_buffer.h"
 
