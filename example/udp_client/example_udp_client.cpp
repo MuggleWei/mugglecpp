@@ -1,5 +1,4 @@
 #include "muggle/cpp/muggle_cpp.h"
-#include <set>
 
 USING_NS_MUGGLE;
 
@@ -24,15 +23,15 @@ public:
 
 		peer->setUserData(data);
 
-		LOG_INFO("connect: %s", data->addr);
-		peers_.insert(peer);
+		conn_peer_ = peer;
+
+		LOG_INFO("udp connect: %s", data->addr);
 	}
 
 	virtual void onError(muggle_socket_event_t *, SocketPeer *peer) override
 	{
 		FooData *data = (FooData*)peer->getUserData();
-		LOG_WARNING("disconnect %s", data->addr);
-		peers_.erase(peer);
+		LOG_WARNING("udp disconnect %s", data->addr);
 	}
 
 	virtual void onMessage(muggle_socket_event_t *, SocketPeer *peer) override
@@ -43,18 +42,16 @@ public:
 		while ((n = peer->recv(buf, sizeof(buf), 0)) > 0)
 		{
 			LOG_INFO("on message: addr=%s, msg=%s", data->addr, buf);
-			peer->send(buf, sizeof(buf), 0);
 		}
 	}
 
 	virtual void onTimer(muggle_socket_event_t *) override
 	{
-		LOG_INFO("onTimer");
-		const char *msg = "heartbeat";
-		size_t len = strlen(msg) + 1;
-		for (SocketPeer *peer : peers_)
+		if (conn_peer_)
 		{
-			peer->send(msg, len, 0);
+			const char *msg = "hello";
+			LOG_INFO("timer send: msg=%s", msg);
+			conn_peer_->send(msg, strlen(msg) + 1, 0);
 		}
 	}
 
@@ -63,16 +60,18 @@ public:
 		FooData *data = (FooData*)peer->getUserData();
 		LOG_WARNING("close %s", data->addr);
 		delete data;
+
+		conn_peer_ = nullptr;
 	}
 
 private:
-	std::set<SocketPeer*> peers_;
+	SocketPeer *conn_peer_;
 };
 
 int main(int argc, char *argv[])
 {
 	// init log
-	Log::SimpleInit(LOG_LEVEL_INFO, "log/example_tcp_server.log", LOG_LEVEL_INFO);
+	Log::SimpleInit(LOG_LEVEL_INFO, "log/example_udp_client.log", LOG_LEVEL_INFO);
 
 	// init socket
 	muggle_socket_lib_init();
@@ -87,13 +86,14 @@ int main(int argc, char *argv[])
 
 	FooHandle handle;
 
-	TcpServer tcp_server;
-	tcp_server.setHandle(&handle);
-	tcp_server.setListenAddr(host, serv);
-	tcp_server.setTcpNoDelay(true);
-	tcp_server.setTimer(5000);
-	tcp_server.setHintsMaxPeer(1024);
-	tcp_server.run();
+	UdpClient udp_client;
+	udp_client.setHandle(&handle);
+	udp_client.setConnectAddr(host, serv);
+	udp_client.setTimer(1000);
+	udp_client.setAutoReconnect(true, 3000);
+	udp_client.setSndBuf(8 * 1024 * 1024);
+	udp_client.setRcvBuf(8 * 1024 * 1024);
+	udp_client.run();
 
 	return 0;
 }

@@ -75,6 +75,7 @@ TcpServer::TcpServer()
 	, tcp_nodelay_(false)
 {
 	memset(&ev_init_arg_, 0, sizeof(ev_init_arg_));
+	ev_init_arg_.timeout_ms = -1;
 }
 
 TcpServer::~TcpServer()
@@ -87,7 +88,7 @@ void TcpServer::run()
 	if (muggle_tcp_listen(host_.c_str(), serv_.c_str(), 512, &peer) == MUGGLE_INVALID_SOCKET)
 	{
 		LOG_ERROR("failed create tcp listen for %s:%s", host_.c_str(), serv_.c_str());
-		exit(EXIT_FAILURE);
+		return;
 	}
 
 	// tcp socket option

@@ -134,6 +134,26 @@ public:
 		const void *buf, size_t len, int flags,
 		const struct sockaddr *dst_addr, muggle_socklen_t addrlen);
 
+	/**
+	 * @brief set socket send buffer size
+	 *
+	 * @param sndbuf_size  send buffer size
+	 *
+	 * @return boolean value
+	 */
+	MUGGLE_CPP_EXPORT
+	bool setSndBuf(int sndbuf_size);
+
+	/**
+	 * @brief set socket receive buffer size
+	 *
+	 * @param rcvbuf_size  receive buffer size
+	 *
+	 * @return boolean value
+	 */
+	MUGGLE_CPP_EXPORT
+	bool setRcvBuf(int rcvbuf_size);
+
 private:
 	muggle_socket_peer_t *peer_;
 	void                 *user_data_;

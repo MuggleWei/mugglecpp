@@ -64,4 +64,33 @@ int SocketPeer::sendTo(
 	return muggle_socket_peer_sendto(peer_, buf, len, flags, dst_addr, addrlen);
 }
 
+bool SocketPeer::setSndBuf(int sndbuf_size)
+{
+	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
+	{
+#if MUGGLE_PLATFORM_WINDOWS
+		int ret = setsockopt(peer_->fd, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf_size, sizeof(sndbuf_size));
+#else
+		int ret = setsockopt(peer_->fd, SOL_SOCKET, SO_SNDBUF, &sndbuf_size, sizeof(sndbuf_size));
+#endif
+		return ret == 0;
+	}
+
+	return false;
+}
+bool SocketPeer::setRcvBuf(int rcvbuf_size)
+{
+	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
+	{
+#if MUGGLE_PLATFORM_WINDOWS
+		int ret = setsockopt(peer_->fd, SOL_SOCKET, SO_RCVBUF, (const char*)&rcvbuf_size, sizeof(rcvbuf_size));
+#else
+		int ret = setsockopt(peer_->fd, SOL_SOCKET, SO_RCVBUF, &rcvbuf_size, sizeof(rcvbuf_size));
+#endif
+		return ret == 0;
+	}
+
+	return false;
+}
+
 NS_MUGGLE_END

@@ -1,46 +1,45 @@
 /******************************************************************************
- *  @file         tcp_client.h
+ *  @file         udp_client.h
  *  @author       Muggle Wei
  *  @email        mugglewei@gmail.com
- *  @date         2021-08-10
+ *  @date         2021-08-13
  *  @copyright    Copyright 2021 Muggle Wei
  *  @license      MIT License
- *  @brief        mugglecpp tcp client
+ *  @brief        mugglecpp udp client
  *****************************************************************************/
 
-#ifndef MUGGLE_CPP_TCP_CLIENT_H_
-#define MUGGLE_CPP_TCP_CLIENT_H_
+#ifndef MUGGLE_CPP_UDP_CLIENT_H_
+#define MUGGLE_CPP_UDP_CLIENT_H_
 
-#include <string>
 #include "muggle/cpp/base/macro.h"
 #include "muggle/cpp/net/socket_peer.h"
 #include "muggle/cpp/net/socket_handle.h"
 
 NS_MUGGLE_BEGIN
 
-class TcpClient
+class UdpClient
 {
 public:
 	/**
-	 * @brief tcp client constructor
+	 * @brief UDP client constructor
 	 */
 	MUGGLE_CPP_EXPORT
-	TcpClient();
+	UdpClient();
 
 	/**
-	 * @brief tcp client destructor
+	 * @brief UDP client destructor
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual ~TcpClient();
+	virtual ~UdpClient();
 
 	/**
-	 * @brief run tcp client event loop
+	 * @brief  run udp client event loop
 	 */
 	MUGGLE_CPP_EXPORT
 	void run();
 
 	/**
-	 * @brief set tcp client handle
+	 * @brief set udp client handle
 	 *
 	 * @param handle socket handle pointer
 	 */
@@ -57,14 +56,6 @@ public:
 	void setConnectAddr(const char *host, const char *serv);
 
 	/**
-	 * @brief set tcp nodelay
-	 *
-	 * @param flag  true or false
-	 */
-	MUGGLE_CPP_EXPORT
-	void setTcpNoDelay(bool flag);
-
-	/**
 	 * @brief set timer
 	 *
 	 * @param ms  timer interval, milli seconds
@@ -75,6 +66,8 @@ public:
 	/**
 	 * @brief set auto reconnect
 	 *
+	 * NOTE: for UDP reconnect, only used in connect target in same machine
+	 *
 	 * @param flag         whether or not auto reconnect
 	 * @param interval_ms  reconnect interval time, milli seconds
 	 */
@@ -82,12 +75,31 @@ public:
 	void setAutoReconnect(bool flag, int interval_ms);
 
 	/**
-	 * @brief set socket connect timeout
+	 * @brief set socket send buffer size
 	 *
-	 * @param sec  connect timeout, seconds
+	 * @param sndbuf_size  send buffer size
+	 *
+	 * @return boolean value
 	 */
 	MUGGLE_CPP_EXPORT
-	void setConnectTimeout(int sec);
+	void setSndBuf(int sndbuf_size);
+
+	/**
+	 * @brief set socket receive buffer size
+	 *
+	 * @param rcvbuf_size  receive buffer size
+	 *
+	 * @return boolean value
+	 */
+	MUGGLE_CPP_EXPORT
+	void setRcvBuf(int rcvbuf_size);
+
+private:
+	/**
+	 * @brief update socket option
+	 */
+	MUGGLE_CPP_EXPORT
+	void updateSocketOption(muggle_socket_peer_t *peer);
 
 private:
 	muggle_socket_peer_t           *connect_peer_;  //!< connected socket peer
@@ -95,13 +107,13 @@ private:
 
 	std::string host_;                   //!< connect host
 	std::string serv_;                   //!< connect serv/port-number
-	bool        tcp_nodelay_;            //!< tcp nodelay
 	bool        auto_reconnect_;         //!< auto reconnect
 	int         auto_recon_interval_ms_; //!< reconnect interval milli seconds
-	int         conn_timeout_sec_;       //!< connect timeout seconds
+
+	int sndbuf_size_;  //!< udp socket send buffer size
+	int rcvbuf_size_;  //!< udp socket recv buffer size
 };
 
 NS_MUGGLE_END
 
-#endif /* ifndef MUGGLE_CPP_TCP_CLIENT_H_ */
-
+#endif /* ifndef MUGGLE_CPP_UDP_CLIENT_H_ */
