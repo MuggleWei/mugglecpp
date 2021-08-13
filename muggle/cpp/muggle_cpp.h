@@ -11,6 +11,9 @@
 #ifndef MUGGLE_CPP_H_
 #define MUGGLE_CPP_H_
 
+// mugglec
+#include "muggle/c/muggle_c.h"
+
 // base
 #include "muggle/cpp/base/macro.h"
 
@@ -21,6 +24,21 @@
 #include "muggle/cpp/log/log.h"
 
 // memory
+#include "muggle/cpp/memory/interface_memory_pool.hpp"
 #include "muggle/cpp/memory/memory_pool.hpp"
+#include "muggle/cpp/memory/threadsafe_memory_pool.hpp"
+#include "muggle/cpp/memory/sowr_memory_pool.hpp"
+
+// sync
+#include "muggle/cpp/sync/channel.h"
+#include "muggle/cpp/sync/ring_buffer.h"
+
+// net
+#include "muggle/cpp/net/socket_peer.h"
+#include "muggle/cpp/net/socket_handle.h"
+#include "muggle/cpp/net/tcp_client.h"
+#include "muggle/cpp/net/tcp_server.h"
+#include "muggle/cpp/net/udp_client.h"
+#include "muggle/cpp/net/udp_server.h"
 
 #endif /* ifndef MUGGLE_CPP_H_ */

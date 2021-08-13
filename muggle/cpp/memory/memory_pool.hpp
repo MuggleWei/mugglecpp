@@ -16,6 +16,7 @@
 
 #include "muggle/cpp/base/macro.h"
 #include "muggle/c/memory/memory_pool.h"
+#include "muggle/cpp/memory/interface_memory_pool.hpp"
 
 NS_MUGGLE_BEGIN
 
@@ -25,7 +26,7 @@ NS_MUGGLE_BEGIN
  * NOTE: this memory pool is not threadsafe
  */
 template<typename T>
-class MemoryPool
+class MemoryPool : public IMemoryPool<T>
 {
 public:
 	/**
@@ -46,6 +47,7 @@ public:
 			muggle_memory_pool_set_flag(&pool_, MUGGLE_MEMORY_POOL_CONSTANT_SIZE);
 		}
 	}
+
 	/**
 	 * @brief destructor
 	 */
@@ -59,7 +61,7 @@ public:
 	 *
 	 * @return allocated memory space
 	 */
-	void* Allocate()
+	virtual void* Allocate() override
 	{
 		return muggle_memory_pool_alloc(&pool_);
 	}
@@ -69,39 +71,9 @@ public:
 	 *
 	 * @param p_data pointer to memory space
 	 */
-	void Recycle(void *p_data)
+	virtual void Recycle(void *p_data) override
 	{
 		muggle_memory_pool_free(&pool_, p_data);
-	}
-
-	/**
-	 * @brief allocate memory space and new
-	 *
-	 * @param args arguments pass into Class T contructor
-	 *
-	 * @return new memory space
-	 */
-	template<typename... Args>
-	T* New(Args&&... args)
-	{
-		void *p_data = this->Allocate();
-		if (p_data == nullptr)
-		{
-			return nullptr;
-		}
-
-		return new (p_data) T(std::forward<Args>(args)...);
-	}
-
-	/**
-	 * @brief destructor and recycle space
-	 *
-	 * @param p
-	 */
-	void Erase(T *p)
-	{
-		p->~T();
-		this->Recycle(p);
 	}
 
 	/**

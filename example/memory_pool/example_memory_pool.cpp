@@ -27,7 +27,7 @@ public:
 private:
 	unsigned int i_;
 };
-static_assert(std::is_trivial<Bar>::value == false, "Foo need trivial class");
+static_assert(std::is_trivial<Bar>::value == false, "Bar need trivial class");
 
 void example_default()
 {
@@ -144,7 +144,7 @@ void example_new_delete()
 
 int main()
 {
-	muggle::Log::SimpleInit(LOG_LEVEL_INFO, LOG_LEVEL_INFO);
+	muggle::Log::SimpleInit(LOG_LEVEL_INFO, "log/example_memory_pool.log", LOG_LEVEL_INFO);
 
 	example_default();
 	example_set_cap();
