@@ -37,5 +37,6 @@
 #include "muggle/cpp/net/socket_peer.h"
 #include "muggle/cpp/net/socket_handle.h"
 #include "muggle/cpp/net/tcp_client.h"
+#include "muggle/cpp/net/tcp_server.h"
 
 #endif /* ifndef MUGGLE_CPP_H_ */
