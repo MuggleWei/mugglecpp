@@ -1,3 +1,3 @@
 ## mugglecpp
 
-mugglecpp implement c++ code encapsulation of [mugglec](github.com/MuggleWei/mugglec) library.
+mugglecpp implement c++ code encapsulation of [mugglec](https://github.com/MuggleWei/mugglec) library.
