@@ -16,7 +16,7 @@
 
 NS_MUGGLE_BEGIN
 
-#if MUGGLE_CPP_USE_LOG_MACRO
+#ifdef MUGGLE_CPP_USE_LOG_MACRO
 
 // use mugglec log by default
 #define LOG_TRACE(format, ...) MUGGLE_LOG_DEFAULT(MUGGLE_LOG_LEVEL_TRACE, format, ##__VA_ARGS__)

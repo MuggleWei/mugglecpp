@@ -30,7 +30,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # options
-option(MUGGLE_CPP_ABANDON_LOG_MACRO "mugglecpp don't define LOG_* macro" OFF)
 option(MUGGLE_CPP_BUILD_SHARED_LIB "mugglecpp build shared library" ON)
 option(MUGGLE_CPP_BUILD_STATIC_PIC "mugglecpp build static library with position independent code flag" ON)
 option(MUGGLE_CPP_BUILD_EXAMPLE "mugglecpp build examples" OFF)
@@ -88,12 +87,6 @@ else()
 	set(MUGGLE_CPP_LIB_TYPE STATIC)
 endif()
 
-if (MUGGLE_CPP_ABANDON_LOG_MACRO)
-	set(MUGGLE_CPP_USE_LOG_MACRO 0)
-else()
-	set(MUGGLE_CPP_USE_LOG_MACRO 1)
-endif()
-
 # version
 file(STRINGS "version.txt" mugglecpp_version)
 
@@ -110,7 +103,6 @@ set(MUGGLE_CPP_SOVERSION "${MUGGLE_CPP_VER_MAJOR}")
 
 # output options
 message("-- mugglecpp version: ${MUGGLE_CPP_VERSION}")
-message("-- option MUGGLE_CPP_ABANDON_LOG_MACRO ${MUGGLE_CPP_ABANDON_LOG_MACRO}")
 message("-- option MUGGLE_CPP_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB}")
 message("-- option MUGGLE_CPP_BUILD_STATIC_PIC ${MUGGLE_CPP_BUILD_STATIC_PIC}")
 message("-- option MUGGLE_CPP_BUILD_EXAMPLE ${MUGGLE_CPP_BUILD_EXAMPLE}")
@@ -139,7 +131,6 @@ endif()
 
 target_compile_definitions(${muggle_cpp} PUBLIC
 	MUGGLE_CPP_SEMVER=${MUGGLE_CPP_VERSION}
-	MUGGLE_CPP_USE_LOG_MACRO=${MUGGLE_CPP_USE_LOG_MACRO}
 )
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	target_compile_definitions(${muggle_cpp}
@@ -147,6 +138,9 @@ if (MUGGLE_CPP_BUILD_SHARED_LIB)
 		PRIVATE MUGGLE_CPP_EXPORTS 
 	)
 endif()
+target_compile_definitions(${muggle_cpp}
+	PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
+)
 
 target_link_libraries(${muggle_cpp} ${muggle_c})
 add_dependencies(${muggle_cpp} ${muggle_c})
@@ -175,6 +169,9 @@ function(add_example name folder)
 	add_dependencies(${name} ${muggle_cpp})
 	target_link_libraries(${name}
 		${muggle_cpp}
+	)
+	target_compile_definitions(${name}
+		PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
 	)
 endfunction()
 
