@@ -35,11 +35,13 @@ public:
 	/**
 	 * @brief socket callback function - on socket success bind addr
 	 */
+	MUGGLE_CPP_EXPORT
 	virtual void onBind(muggle_socket_event_t *ev, SocketPeer *peer);
 
 	/**
 	 * @brief socket callback function - on socket success listen addr
 	 */
+	MUGGLE_CPP_EXPORT
 	virtual void onListen(muggle_socket_event_t *ev, SocketPeer *peer);
 
 	/**
