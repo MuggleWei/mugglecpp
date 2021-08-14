@@ -184,11 +184,7 @@ void UdpClient::updateSocketOption(muggle_socket_peer_t *peer)
 {
 	if (sndbuf_size_ > 0)
 	{
-#if MUGGLE_PLATFORM_WINDOWS
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf_size_, sizeof(sndbuf_size_));
-#else
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, &sndbuf_size_, sizeof(sndbuf_size_));
-#endif
+		int ret = muggle_setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (void*)&sndbuf_size_, sizeof(sndbuf_size_));
 		if (ret != 0)
 		{
 			char err_msg[1024];
@@ -199,11 +195,7 @@ void UdpClient::updateSocketOption(muggle_socket_peer_t *peer)
 
 	if (rcvbuf_size_ > 0)
 	{
-#if MUGGLE_PLATFORM_WINDOWS
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (const char*)&rcvbuf_size_, sizeof(rcvbuf_size_));
-#else
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, &rcvbuf_size_, sizeof(rcvbuf_size_));
-#endif
+		int ret = muggle_setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (void*)&rcvbuf_size_, sizeof(rcvbuf_size_));
 		if (ret != 0)
 		{
 			char err_msg[1024];

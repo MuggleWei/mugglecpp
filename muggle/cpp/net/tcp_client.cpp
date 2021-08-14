@@ -112,7 +112,7 @@ void TcpClient::run()
 		if (tcp_nodelay_)
 		{
 			int optval = 1;
-			setsockopt(peer.fd, IPPROTO_TCP, TCP_NODELAY, (void*)&optval, sizeof(optval));
+			muggle_setsockopt(peer.fd, IPPROTO_TCP, TCP_NODELAY, (void*)&optval, sizeof(optval));
 		}
 
 		// fillup event loop input arguments

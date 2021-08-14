@@ -5,6 +5,19 @@ USING_NS_MUGGLE;
 class FooHandle : public muggle::SocketHandle
 {
 public:
+	virtual void onBind(muggle_socket_event_t*, SocketPeer *peer) override
+	{
+		char buf[MUGGLE_SOCKET_ADDR_STRLEN];
+		struct sockaddr *addr = (struct sockaddr*)&peer->getPeer()->addr;
+		if (muggle_socket_ntop(
+			addr, buf, MUGGLE_SOCKET_ADDR_STRLEN, 0) == NULL)
+		{
+			snprintf(buf, MUGGLE_SOCKET_ADDR_STRLEN, "unknown:unknown");
+		}
+
+		LOG_INFO("success bind: addr=%s", buf);
+	}
+
 	virtual void onMessage(muggle_socket_event_t *, SocketPeer *peer) override
 	{
 		struct sockaddr_storage addr;

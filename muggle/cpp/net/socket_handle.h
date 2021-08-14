@@ -33,6 +33,16 @@ public:
 	virtual ~SocketHandle();
 
 	/**
+	 * @brief socket callback function - on socket success bind addr
+	 */
+	virtual void onBind(muggle_socket_event_t *ev, SocketPeer *peer);
+
+	/**
+	 * @brief socket callback function - on socket success listen addr
+	 */
+	virtual void onListen(muggle_socket_event_t *ev, SocketPeer *peer);
+
+	/**
 	 * @brief socket callback function - onConnect
 	 */
 	MUGGLE_CPP_EXPORT
