@@ -14,11 +14,6 @@ static void udp_server_on_close(muggle_socket_event_t *ev, muggle_socket_peer_t 
 		handle->onClose(ev, (SocketPeer*)peer->data);
 	}
 
-	SocketPeer *socket_peer = (SocketPeer*)peer->data;
-	if (socket_peer)
-	{
-		delete socket_peer;
-	}
 	peer->data = nullptr;
 }
 
@@ -61,6 +56,7 @@ void UdpServer::run()
 		LOG_ERROR("failed create udp bind for %s:%s", host_.c_str(), serv_.c_str());
 		return;
 	}
+	getsockname(peer.fd, (struct sockaddr*)&peer.addr, &peer.addr_len);
 
 	// update socket option
 	updateSocketOption(&peer);
@@ -84,16 +80,14 @@ void UdpServer::run()
 	}
 
 	// bind socket peer
-	SocketPeer *socket_peer = new SocketPeer();
-	if (socket_peer == nullptr)
+	SocketPeer socket_peer;
+	socket_peer.setPeer(bind_peer_);
+	bind_peer_->data = &socket_peer;
+	if (ev_init_arg_.datas)
 	{
-		LOG_ERROR("failed allocate memory for socket peer");
-		muggle_socket_event_loop_exit(&ev);
-		muggle_socket_event_loop(&ev);
-		return;
+		SocketHandle *handle = (SocketHandle*)ev_init_arg_.datas;
+		handle->onBind(&ev, &socket_peer);
 	}
-	socket_peer->setPeer(bind_peer_);
-	bind_peer_->data = socket_peer;
 
 	muggle_socket_event_loop(&ev);
 }
@@ -133,11 +127,7 @@ void UdpServer::updateSocketOption(muggle_socket_peer_t *peer)
 {
 	if (sndbuf_size_ > 0)
 	{
-#if MUGGLE_PLATFORM_WINDOWS
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf_size_, sizeof(sndbuf_size_));
-#else
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, &sndbuf_size_, sizeof(sndbuf_size_));
-#endif
+		int ret = muggle_setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (void*)&sndbuf_size_, sizeof(sndbuf_size_));
 		if (ret != 0)
 		{
 			char err_msg[1024];
@@ -148,11 +138,7 @@ void UdpServer::updateSocketOption(muggle_socket_peer_t *peer)
 
 	if (rcvbuf_size_ > 0)
 	{
-#if MUGGLE_PLATFORM_WINDOWS
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (const char*)&rcvbuf_size_, sizeof(rcvbuf_size_));
-#else
-		int ret = setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, &rcvbuf_size_, sizeof(rcvbuf_size_));
-#endif
+		int ret = muggle_setsockopt(peer->fd, SOL_SOCKET, SO_SNDBUF, (void*)&rcvbuf_size_, sizeof(rcvbuf_size_));
 		if (ret != 0)
 		{
 			char err_msg[1024];

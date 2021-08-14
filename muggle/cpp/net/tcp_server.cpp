@@ -90,12 +90,13 @@ void TcpServer::run()
 		LOG_ERROR("failed create tcp listen for %s:%s", host_.c_str(), serv_.c_str());
 		return;
 	}
+	getsockname(peer.fd, (struct sockaddr*)&peer.addr, &peer.addr_len);
 
 	// tcp socket option
 	if (tcp_nodelay_)
 	{
 		int optval = 1;
-		setsockopt(peer.fd, IPPROTO_TCP, TCP_NODELAY, (void*)&optval, sizeof(optval));
+		muggle_setsockopt(peer.fd, IPPROTO_TCP, TCP_NODELAY, (void*)&optval, sizeof(optval));
 	}
 
 	// fillup event loop input arguments
@@ -115,6 +116,17 @@ void TcpServer::run()
 		MUGGLE_LOG_ERROR("failed init socket event");
 		exit(EXIT_FAILURE);
 	}
+
+	// notify success listen
+	SocketPeer listener;
+	listener.setPeer(listener_);
+	listener_->data = &listener;
+	if (ev_init_arg_.datas)
+	{
+		SocketHandle *handle = (SocketHandle*)ev_init_arg_.datas;
+		handle->onListen(&ev, &listener);
+	}
+
 	muggle_socket_event_loop(&ev);
 }
 

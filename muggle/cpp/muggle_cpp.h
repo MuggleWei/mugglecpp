@@ -41,4 +41,9 @@
 #include "muggle/cpp/net/udp_client.h"
 #include "muggle/cpp/net/udp_server.h"
 
+// os
+#include "muggle/cpp/os/dl.h"
+#include "muggle/cpp/os/os.h"
+#include "muggle/cpp/os/path.h"
+
 #endif /* ifndef MUGGLE_CPP_H_ */

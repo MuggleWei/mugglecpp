@@ -11,13 +11,26 @@ struct FooData
 class FooHandle : public muggle::SocketHandle
 {
 public:
+	virtual void onListen(muggle_socket_event_t*, SocketPeer *peer) override
+	{
+		char buf[MUGGLE_SOCKET_ADDR_STRLEN];
+		struct sockaddr *addr = (struct sockaddr*)&peer->getPeer()->addr;
+		if (muggle_socket_ntop(
+			addr, buf, MUGGLE_SOCKET_ADDR_STRLEN, 0) == NULL)
+		{
+			snprintf(buf, MUGGLE_SOCKET_ADDR_STRLEN, "unknown:unknown");
+		}
+
+		LOG_INFO("success listen: addr=%s", buf);
+	}
+
 	virtual void onConnect(muggle_socket_event_t *, SocketPeer *peer) override
 	{
 		FooData *data = new FooData;
 		memset(data->addr, 0, sizeof(data->addr));
 		struct sockaddr *addr = (struct sockaddr*)&peer->getPeer()->addr;
 		if (muggle_socket_ntop(
-				addr,data->addr, MUGGLE_SOCKET_ADDR_STRLEN, 0) == NULL)
+				addr, data->addr, MUGGLE_SOCKET_ADDR_STRLEN, 0) == NULL)
 		{
 			snprintf(data->addr, MUGGLE_SOCKET_ADDR_STRLEN, "unknown:unknown");
 		}
