@@ -131,6 +131,7 @@ endif()
 
 target_compile_definitions(${muggle_cpp} PUBLIC
 	MUGGLE_CPP_SEMVER=${MUGGLE_CPP_VERSION}
+	PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
 )
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	target_compile_definitions(${muggle_cpp}
@@ -138,12 +139,15 @@ if (MUGGLE_CPP_BUILD_SHARED_LIB)
 		PRIVATE MUGGLE_CPP_EXPORTS 
 	)
 endif()
-target_compile_definitions(${muggle_cpp}
-	PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
-)
 
 target_link_libraries(${muggle_cpp} ${muggle_c})
 add_dependencies(${muggle_cpp} ${muggle_c})
+install(TARGETS ${muggle_cpp}
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib/static
+)
+muggle_install_headers(${CMAKE_CURRENT_LIST_DIR}/muggle include/muggle)
 
 # functions
 function(add_example name folder)
