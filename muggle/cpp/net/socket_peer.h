@@ -57,84 +57,6 @@ public:
 	void* getUserData();
 
 	/**
-	 * @brief increases reference count of socket peer
-	 *
-	 * @return reference count of peer after this call
-	 */
-	MUGGLE_CPP_EXPORT
-	int retain();
-
-	/**
-	 * @brief decreases reference count of socket peer
-	 *
-	 * @return reference count of peer after this call
-	 */
-	MUGGLE_CPP_EXPORT
-	int release();
-
-	/**
-	 * @brief try to close socket peer
-	 */
-	MUGGLE_CPP_EXPORT
-	void close();
-
-	/**
-	 * @brief receive messages from a socket peer
-	 *
-	 * @param buf    buffer store received bytes
-	 * @param len    buffer size
-	 * @param flags  recv flags
-	 *
-	 * @return the number of bytes received
-	 */
-	MUGGLE_CPP_EXPORT
-	int recv(void *buf, size_t len, int flags);
-
-	/**
-	 * @brief receive messages from a socket peer
-	 *
-	 * @param buf    buffer store received bytes
-	 * @param len    buffer size
-	 * @param flags  recv flags
-	 * @param addr     socket address
-	 * @param addrlen  socket address length
-	 *
-	 * @return the number of bytes received
-	 */
-	MUGGLE_CPP_EXPORT
-	int recvFrom(
-		void *buf, size_t len, int flags,
-		struct sockaddr *addr, muggle_socklen_t *addrlen);
-
-	/**
-	 * @brief socket send message
-	 *
-	 * @param buf        buffer store the bytes that need to sent
-	 * @param len        buffer size
-	 * @param flags      flag
-	 *
-	 * @return 
-	 */
-	MUGGLE_CPP_EXPORT
-	int send(const void *buf, size_t len, int flags);
-
-	/**
-	 * @brief socket send message to dst addr
-	 *
-	 * @param buf        buffer store the bytes that need to sent
-	 * @param len        buffer size
-	 * @param flags      flag
-	 * @param dest_addr  dest socket address
-	 * @param addrlen    dest socket address length
-	 *
-	 * @return 
-	 */
-	MUGGLE_CPP_EXPORT
-	int sendTo(
-		const void *buf, size_t len, int flags,
-		const struct sockaddr *dst_addr, muggle_socklen_t addrlen);
-
-	/**
 	 * @brief set socket send buffer size
 	 *
 	 * @param sndbuf_size  send buffer size
@@ -153,6 +75,84 @@ public:
 	 */
 	MUGGLE_CPP_EXPORT
 	bool setRcvBuf(int rcvbuf_size);
+
+	/**
+	 * @brief increases reference count of socket peer
+	 *
+	 * @return reference count of peer after this call
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int retain();
+
+	/**
+	 * @brief decreases reference count of socket peer
+	 *
+	 * @return reference count of peer after this call
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int release();
+
+	/**
+	 * @brief try to close socket peer
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual void close();
+
+	/**
+	 * @brief receive messages from a socket peer
+	 *
+	 * @param buf    buffer store received bytes
+	 * @param len    buffer size
+	 * @param flags  recv flags
+	 *
+	 * @return the number of bytes received
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int recv(void *buf, size_t len, int flags);
+
+	/**
+	 * @brief receive messages from a socket peer
+	 *
+	 * @param buf    buffer store received bytes
+	 * @param len    buffer size
+	 * @param flags  recv flags
+	 * @param addr     socket address
+	 * @param addrlen  socket address length
+	 *
+	 * @return the number of bytes received
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int recvFrom(
+		void *buf, size_t len, int flags,
+		struct sockaddr *addr, muggle_socklen_t *addrlen);
+
+	/**
+	 * @brief socket send message
+	 *
+	 * @param buf        buffer store the bytes that need to sent
+	 * @param len        buffer size
+	 * @param flags      flag
+	 *
+	 * @return 
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int send(const void *buf, size_t len, int flags);
+
+	/**
+	 * @brief socket send message to dst addr
+	 *
+	 * @param buf        buffer store the bytes that need to sent
+	 * @param len        buffer size
+	 * @param flags      flag
+	 * @param dest_addr  dest socket address
+	 * @param addrlen    dest socket address length
+	 *
+	 * @return 
+	 */
+	MUGGLE_CPP_EXPORT
+	virtual int sendTo(
+		const void *buf, size_t len, int flags,
+		const struct sockaddr *dst_addr, muggle_socklen_t addrlen);
 
 private:
 	muggle_socket_peer_t *peer_;

@@ -29,6 +29,27 @@ void* SocketPeer::getUserData()
 	return user_data_;
 }
 
+bool SocketPeer::setSndBuf(int sndbuf_size)
+{
+	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
+	{
+		int ret = muggle_setsockopt(peer_->fd, SOL_SOCKET, SO_SNDBUF, (void*)&sndbuf_size, sizeof(sndbuf_size));
+		return ret == 0;
+	}
+
+	return false;
+}
+bool SocketPeer::setRcvBuf(int rcvbuf_size)
+{
+	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
+	{
+		int ret = muggle_setsockopt(peer_->fd, SOL_SOCKET, SO_RCVBUF, (void*)&rcvbuf_size, sizeof(rcvbuf_size));
+		return ret == 0;
+	}
+
+	return false;
+}
+
 int SocketPeer::retain()
 {
 	return muggle_socket_peer_retain(peer_);
@@ -62,27 +83,6 @@ int SocketPeer::sendTo(
 	const struct sockaddr *dst_addr, muggle_socklen_t addrlen)
 {
 	return muggle_socket_peer_sendto(peer_, buf, len, flags, dst_addr, addrlen);
-}
-
-bool SocketPeer::setSndBuf(int sndbuf_size)
-{
-	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
-	{
-		int ret = muggle_setsockopt(peer_->fd, SOL_SOCKET, SO_SNDBUF, (void*)&sndbuf_size, sizeof(sndbuf_size));
-		return ret == 0;
-	}
-
-	return false;
-}
-bool SocketPeer::setRcvBuf(int rcvbuf_size)
-{
-	if (peer_ && peer_->fd != MUGGLE_INVALID_SOCKET)
-	{
-		int ret = muggle_setsockopt(peer_->fd, SOL_SOCKET, SO_RCVBUF, (void*)&rcvbuf_size, sizeof(rcvbuf_size));
-		return ret == 0;
-	}
-
-	return false;
 }
 
 NS_MUGGLE_END
