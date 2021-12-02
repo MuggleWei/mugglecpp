@@ -42,16 +42,16 @@ if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	# Download and unpack mugglec at configure time
 	configure_file(
 		${CMAKE_CURRENT_LIST_DIR}/cmake/mugglec.cmake.in
-		${CMAKE_CURRENT_BINARY_DIR}/mugglec-download/CMakeLists.txt)
+		${CMAKE_BINARY_DIR}/_deps/mugglec-download/CMakeLists.txt)
 	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mugglec-download)
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/_deps/mugglec-download)
 	if (result)
 		message(FATAL_ERROR "cmake step for mugglec failed: ${result}")
 	endif()
 	execute_process(COMMAND ${CMAKE_COMMAND} --build .
 		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mugglec-download)
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/_deps/mugglec-download)
 	if (result)
 		message(FATAL_ERROR "build step for mugglec failed: ${result}")
 	endif()
@@ -66,12 +66,12 @@ if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 
 	# add mugglec to build
 	add_subdirectory(
-		${CMAKE_CURRENT_BINARY_DIR}/mugglec-src
-		${CMAKE_CURRENT_BINARY_DIR}/mugglec-build)
+		${CMAKE_BINARY_DIR}/_deps/mugglec-src
+		${CMAKE_BINARY_DIR}/_deps/mugglec-build)
 
 	# include directories
 	include_directories(
-		${CMAKE_CURRENT_BINARY_DIR}/mugglec-src
+		${CMAKE_BINARY_DIR}/_deps/mugglec-src
 	)
 endif()
 
