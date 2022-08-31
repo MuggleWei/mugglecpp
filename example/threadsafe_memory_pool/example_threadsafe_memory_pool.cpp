@@ -181,7 +181,7 @@ void example_non_trivial()
 
 int main()
 {
-	muggle::Log::SimpleInit(LOG_LEVEL_INFO, "log/example_threadsafe_memory_pool.log", LOG_LEVEL_TRACE);
+	muggle::Log::SimpleInit(LOG_LEVEL_INFO, LOG_LEVEL_DEBUG);
 
 	example_trivial();
 	example_non_trivial();

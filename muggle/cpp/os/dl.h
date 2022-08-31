@@ -26,7 +26,7 @@ public:
 	 * @return handle for the loaded library
 	 */
 	MUGGLE_CPP_EXPORT
-	static void* load(const char *path);
+	static void* Load(const char *path);
 
 	/**
 	 * @brief 
@@ -39,7 +39,7 @@ public:
 	 * @return address associated with symbol
 	 */
 	MUGGLE_CPP_EXPORT
-	static void* sym(void *handle, const char *symbol);
+	static void* Sym(void *handle, const char *symbol);
 
 	/**
 	 * @brief 
@@ -53,7 +53,7 @@ public:
 	 *     - otherwise return error code in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int close(void *handle);
+	static int Close(void *handle);
 };
 
 NS_MUGGLE_END

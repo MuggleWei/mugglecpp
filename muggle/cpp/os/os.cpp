@@ -4,7 +4,7 @@
 NS_MUGGLE_BEGIN
 
 
-std::string Os::processPath()
+std::string Os::ProcessPath()
 {
 	char buf[MUGGLE_MAX_PATH];
 	if (muggle_os_process_path(buf, sizeof(buf)) != 0)
@@ -14,7 +14,7 @@ std::string Os::processPath()
 	return buf;
 }
 
-std::string Os::curdir()
+std::string Os::Curdir()
 {
 	char buf[MUGGLE_MAX_PATH];
 	if (muggle_os_curdir(buf, sizeof(buf)) != 0)
@@ -24,27 +24,27 @@ std::string Os::curdir()
 	return buf;
 }
 
-int Os::chdir(const char *path)
+int Os::Chdir(const char *path)
 {
 	return muggle_os_chdir(path);
 }
 
-int Os::mkdir(const char *path)
+int Os::Mkdir(const char *path)
 {
 	return muggle_os_mkdir(path);
 }
 
-int Os::remove(const char *path)
+int Os::Remove(const char *path)
 {
 	return muggle_os_remove(path);
 }
 
-int Os::rmdir(const char *path)
+int Os::Rmdir(const char *path)
 {
 	return muggle_os_rmdir(path);
 }
 
-int Os::rename(const char *src, const char *dst)
+int Os::Rename(const char *src, const char *dst)
 {
 	return muggle_os_rename(src, dst);
 }

@@ -22,7 +22,7 @@ void run(muggle::Channel *chan)
 			foo->thread_idx = thread_id;
 			foo->i = i;
 
-			int ret = chan->write((void*)foo);
+			int ret = chan->Write((void*)foo);
 			if (ret != 0)
 			{
 				LOG_WARNING(
@@ -36,7 +36,7 @@ void run(muggle::Channel *chan)
 	std::function<void()> consumer = [&]() {
 		while (1)
 		{
-			Foo *foo = (Foo*)chan->read();
+			Foo *foo = (Foo*)chan->Read();
 			if (foo == nullptr)
 			{
 				break;
@@ -58,7 +58,7 @@ void run(muggle::Channel *chan)
 	p2.join();
 	p3.join();
 
-	chan->write(nullptr);
+	chan->Write(nullptr);
 	c0.join();
 
 	for (int i = 0; i < NUM_THREAD; i++)
@@ -69,7 +69,7 @@ void run(muggle::Channel *chan)
 
 int main()
 {
-	muggle::Log::SimpleInit(LOG_LEVEL_WARNING, "log/example_channel.log", LOG_LEVEL_INFO);
+	muggle::Log::SimpleInit(LOG_LEVEL_INFO, LOG_LEVEL_DEBUG);
 
 	muggle::Channel chan(512, 0);
 	LOG_INFO("run channel");

@@ -34,12 +34,10 @@
 #include "muggle/cpp/sync/ring_buffer.h"
 
 // net
-#include "muggle/cpp/net/socket_peer.h"
-#include "muggle/cpp/net/socket_handle.h"
-#include "muggle/cpp/net/tcp_client.h"
-#include "muggle/cpp/net/tcp_server.h"
-#include "muggle/cpp/net/udp_client.h"
-#include "muggle/cpp/net/udp_server.h"
+#include "muggle/cpp/net/socket_context.h"
+#include "muggle/cpp/net/socket_utils.h"
+#include "muggle/cpp/net/net_event_handle.h"
+#include "muggle/cpp/net/net_event_loop.h"
 
 // os
 #include "muggle/cpp/os/dl.h"

@@ -25,7 +25,7 @@ public:
 	 * @return process path, on failed, return empty string
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string processPath();
+	static std::string ProcessPath();
 
 	/**
 	 * @brief get current working directory
@@ -33,7 +33,7 @@ public:
 	 * @return current working directory, on failed, return empty string
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string curdir();
+	static std::string Curdir();
 
 	/**
 	 * @brief change working directory
@@ -43,7 +43,7 @@ public:
 	 * @return on success returns 0, otherwise return errno in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int chdir(const char *path);
+	static int Chdir(const char *path);
 
 	/**
 	 * @brief recursive create directory named path
@@ -53,7 +53,7 @@ public:
 	 * @return success returns 0, otherwise return errno in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int mkdir(const char *path);
+	static int Mkdir(const char *path);
 
 	/**
 	 * @brief remove the file path
@@ -63,7 +63,7 @@ public:
 	 * @return success returns 0, otherwise return errno in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int remove(const char *path);
+	static int Remove(const char *path);
 
 	/**
 	 * @brief delete an empty directory
@@ -73,7 +73,7 @@ public:
 	 * @return success returns 0, otherwise return errno in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int rmdir(const char *path);
+	static int Rmdir(const char *path);
 
 	/**
 	 * @brief rename the file or directory src to dst
@@ -84,7 +84,7 @@ public:
 	 * @return success returns 0, otherwise return errno in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	static int rename(const char *src, const char *dst);
+	static int Rename(const char *src, const char *dst);
 };
 
 NS_MUGGLE_END

@@ -16,12 +16,12 @@ Channel::~Channel()
 	muggle_channel_destroy(&channel_);
 }
 
-int Channel::write(void *data)
+int Channel::Write(void *data)
 {
 	return muggle_channel_write(&channel_, data);
 }
 
-void* Channel::read()
+void* Channel::Read()
 {
 	return muggle_channel_read(&channel_);
 }

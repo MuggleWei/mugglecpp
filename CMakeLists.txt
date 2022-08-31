@@ -30,56 +30,60 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # options
-option(MUGGLE_CPP_BUILD_SHARED_LIB "mugglecpp build shared library" ON)
+if (BUILD_SHARED_LIBS)
+	option(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT ON)
+else(BUILD_SHARED_LIBS)
+	option(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT OFF)
+endif()
+
+option(MUGGLE_CPP_BUILD_SHARED_LIB "mugglecpp build shared library" ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT})
 option(MUGGLE_CPP_BUILD_STATIC_PIC "mugglecpp build static library with position independent code flag" ON)
 option(MUGGLE_CPP_BUILD_EXAMPLE "mugglecpp build examples" OFF)
-option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp download mugglec" ON)
 
 ################################
 # mugglec
 
-if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
-	# Download and unpack mugglec at configure time
-	configure_file(
-		${CMAKE_CURRENT_LIST_DIR}/cmake/mugglec.cmake.in
-		${CMAKE_BINARY_DIR}/_deps/mugglec-download/CMakeLists.txt)
-	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/_deps/mugglec-download)
-	if (result)
-		message(FATAL_ERROR "cmake step for mugglec failed: ${result}")
-	endif()
-	execute_process(COMMAND ${CMAKE_COMMAND} --build .
-		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/_deps/mugglec-download)
-	if (result)
-		message(FATAL_ERROR "build step for mugglec failed: ${result}")
-	endif()
+set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
 
-	# set mugglec compile options
-	set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_SHARED_LIB ON CACHE BOOL "")
-	set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
-	set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
-
-	# add mugglec to build
-	add_subdirectory(
-		${CMAKE_BINARY_DIR}/_deps/mugglec-src
-		${CMAKE_BINARY_DIR}/_deps/mugglec-build)
-
-	# include directories
-	include_directories(
-		${CMAKE_BINARY_DIR}/_deps/mugglec-src
-	)
+# Download and unpack mugglec at configure time
+configure_file(
+	${CMAKE_CURRENT_LIST_DIR}/cmake/mugglec.cmake.in
+	${FETCHCONTENT_BASE_DIR}/mugglec-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+	RESULT_VARIABLE result
+	WORKING_DIRECTORY ${FETCHCONTENT_BASE_DIR}/mugglec-download)
+if (result)
+	message(FATAL_ERROR "cmake step for mugglec failed: ${result}")
 endif()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+	RESULT_VARIABLE result
+	WORKING_DIRECTORY ${FETCHCONTENT_BASE_DIR}/mugglec-download)
+if (result)
+	message(FATAL_ERROR "build step for mugglec failed: ${result}")
+endif()
+
+# set mugglec compile options
+set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
+set(MUGGLE_BUILD_SHARED_LIB ON CACHE BOOL ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT})
+set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
+set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
+set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
+set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
+
+# add mugglec to build
+add_subdirectory(
+	${FETCHCONTENT_BASE_DIR}/mugglec-src
+	${FETCHCONTENT_BASE_DIR}/mugglec-build)
+
+# include directories
+include_directories(
+	${FETCHCONTENT_BASE_DIR}/mugglec-src)
 
 ################################
 # projects
 
 # cmake
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/muggle_utils.cmake)
+include(${FETCHCONTENT_BASE_DIR}/mugglec-src/cmake/muggle_utils.cmake)
 
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	set(MUGGLE_CPP_LIB_TYPE SHARED)
@@ -106,7 +110,6 @@ message("-- mugglecpp version: ${MUGGLE_CPP_VERSION}")
 message("-- option MUGGLE_CPP_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB}")
 message("-- option MUGGLE_CPP_BUILD_STATIC_PIC ${MUGGLE_CPP_BUILD_STATIC_PIC}")
 message("-- option MUGGLE_CPP_BUILD_EXAMPLE ${MUGGLE_CPP_BUILD_EXAMPLE}")
-message("-- option MUGGLE_CPP_DOWNLOAD_MUGGLEC ${MUGGLE_CPP_DOWNLOAD_MUGGLEC}")
 
 # include directories
 include_directories(
@@ -131,7 +134,6 @@ endif()
 
 target_compile_definitions(${muggle_cpp} PUBLIC
 	MUGGLE_CPP_SEMVER=${MUGGLE_CPP_VERSION}
-	PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
 )
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	target_compile_definitions(${muggle_cpp}
@@ -175,7 +177,7 @@ function(add_example name folder)
 		${muggle_cpp}
 	)
 	target_compile_definitions(${name}
-		PRIVATE MUGGLE_CPP_USE_LOG_MACRO=1
+		PRIVATE MUGGLE_HOLD_LOG_MACRO
 	)
 endfunction()
 
