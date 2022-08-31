@@ -29,7 +29,7 @@ public:
 	 *     - on failed, return ""
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string abs(const char *path);
+	static std::string Abs(const char *path);
 
 	/**
 	 * @brief return the base name of pathname path
@@ -41,7 +41,7 @@ public:
 	 *     - on failed, return ""
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string basename(const char *path);
+	static std::string Basename(const char *path);
 
 	/**
 	 * @brief return the dirname of pathname path
@@ -53,7 +53,7 @@ public:
 	 *     - on failed, return ""
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string dirname(const char *path);
+	static std::string Dirname(const char *path);
 
 	/**
 	 * @brief check whether the path is absolutized version of path
@@ -63,7 +63,7 @@ public:
 	 * @return boolean value
 	 */
 	MUGGLE_CPP_EXPORT 
-	static bool isAbs(const char *path);
+	static bool IsAbs(const char *path);
 
 	/**
 	 * @brief check whether the path exists
@@ -73,7 +73,7 @@ public:
 	 * @return boolean value
 	 */
 	MUGGLE_CPP_EXPORT
-	static bool exists(const char *path);
+	static bool Exists(const char *path);
 
 	/**
 	 * @brief join two path
@@ -86,7 +86,7 @@ public:
 	 *     - on failed, return ""
 	 */
 	MUGGLE_CPP_EXPORT
-	static std::string join(const char *path1, const char *path2);
+	static std::string Join(const char *path1, const char *path2);
 
 	/**
 	 * @brief normalize a pathname
@@ -99,7 +99,7 @@ public:
 	 *     - on failed, return ""
 	 */
 	MUGGLE_C_EXPORT
-	static std::string norm(const char *path);
+	static std::string Norm(const char *path);
 };
 
 NS_MUGGLE_END

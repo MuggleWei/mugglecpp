@@ -3,17 +3,17 @@
 
 NS_MUGGLE_BEGIN
 
-void* Dl::load(const char *path)
+void* Dl::Load(const char *path)
 {
 	return muggle_dl_load(path);
 }
 
-void* Dl::sym(void *handle, const char *symbol)
+void* Dl::Sym(void *handle, const char *symbol)
 {
 	return muggle_dl_sym(handle, symbol);
 }
 
-int Dl::close(void *handle)
+int Dl::Close(void *handle)
 {
 	return muggle_dl_close(handle);
 }

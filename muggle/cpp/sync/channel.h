@@ -11,8 +11,8 @@
 #ifndef MUGGLE_CPP_CHANNEL_H_
 #define MUGGLE_CPP_CHANNEL_H_
 
-#include "muggle/c/sync/channel.h"
 #include "muggle/cpp/base/macro.h"
+#include "muggle/c/sync/channel.h"
 #include <stdint.h>
 
 NS_MUGGLE_BEGIN
@@ -45,7 +45,7 @@ public:
 	 *     - on failed, return error code in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual int write(void *data);
+	virtual int Write(void *data);
 
 	/**
 	 * @brief read data from channel
@@ -53,7 +53,7 @@ public:
 	 * @return data pointer
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual void* read();
+	virtual void* Read();
 
 private:
 	muggle_channel_t channel_;

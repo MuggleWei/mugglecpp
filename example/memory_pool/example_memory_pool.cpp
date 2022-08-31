@@ -144,7 +144,7 @@ void example_new_delete()
 
 int main()
 {
-	muggle::Log::SimpleInit(LOG_LEVEL_INFO, "log/example_memory_pool.log", LOG_LEVEL_INFO);
+	muggle::Log::SimpleInit(LOG_LEVEL_INFO, LOG_LEVEL_DEBUG);
 
 	example_default();
 	example_set_cap();

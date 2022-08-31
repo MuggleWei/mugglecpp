@@ -46,7 +46,7 @@ public:
 	 *     - on failed, return error code in muggle/c/base/err.h
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual int write(void *data);
+	virtual int Write(void *data);
 
 	/**
 	 * @brief read data from ring buffer
@@ -56,7 +56,7 @@ public:
 	 * @return data pointer
 	 */
 	MUGGLE_CPP_EXPORT
-	virtual void* read(muggle_atomic_int idx);
+	virtual void* Read(muggle_atomic_int idx);
 
 private:
 	muggle_ring_buffer_t ring_buf_;

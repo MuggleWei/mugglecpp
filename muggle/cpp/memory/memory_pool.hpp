@@ -14,8 +14,8 @@
 #include <stdexcept>
 #include <utility>
 
-#include "muggle/cpp/base/macro.h"
 #include "muggle/c/memory/memory_pool.h"
+#include "muggle/cpp/base/macro.h"
 #include "muggle/cpp/memory/interface_memory_pool.hpp"
 
 NS_MUGGLE_BEGIN
