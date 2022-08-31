@@ -63,6 +63,11 @@ void SocketContext::SetFlagClose()
 	muggle_socket_ctx_set_flag(ctx_, MUGGLE_EV_CTX_FLAG_CLOSED);
 }
 
+void SocketContext::ClearFlags()
+{
+	ctx_->base.flags = 0;
+}
+
 int SocketContext::RefCntRetain()
 {
 	return muggle_socket_ctx_ref_retain(ctx_);

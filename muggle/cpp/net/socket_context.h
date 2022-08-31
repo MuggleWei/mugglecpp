@@ -114,6 +114,12 @@ public:
 	void SetFlagClose();
 
 	/**
+	 * @brief mark as wait to close
+	 */
+	MUGGLE_CPP_EXPORT
+	void ClearFlags();
+
+	/**
 	 * @brief reference count retain
 	 *
 	 * @return
