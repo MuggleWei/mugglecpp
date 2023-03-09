@@ -42,27 +42,9 @@ option(MUGGLE_CPP_BUILD_EXAMPLE "mugglecpp build examples" OFF)
 
 ################################
 # mugglec
-
+include(FetchContent)
 set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
 
-# Download and unpack mugglec at configure time
-configure_file(
-	${CMAKE_CURRENT_LIST_DIR}/cmake/mugglec.cmake.in
-	${FETCHCONTENT_BASE_DIR}/mugglec-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY ${FETCHCONTENT_BASE_DIR}/mugglec-download)
-if (result)
-	message(FATAL_ERROR "cmake step for mugglec failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY ${FETCHCONTENT_BASE_DIR}/mugglec-download)
-if (result)
-	message(FATAL_ERROR "build step for mugglec failed: ${result}")
-endif()
-
-# set mugglec compile options
 set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
 set(MUGGLE_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT} CACHE BOOL "")
 set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
@@ -70,14 +52,13 @@ set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
 set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
 set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
 
-# add mugglec to build
-add_subdirectory(
-	${FETCHCONTENT_BASE_DIR}/mugglec-src
-	${FETCHCONTENT_BASE_DIR}/mugglec-build)
-
-# include directories
-include_directories(
-	${FETCHCONTENT_BASE_DIR}/mugglec-src)
+FetchContent_Declare(
+	mugglec
+	GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
+	GIT_TAG v1.0.0-alpha.7
+	GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(mugglec)
 
 ################################
 # projects
