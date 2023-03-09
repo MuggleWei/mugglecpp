@@ -111,15 +111,14 @@ message("-- option MUGGLE_CPP_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB}")
 message("-- option MUGGLE_CPP_BUILD_STATIC_PIC ${MUGGLE_CPP_BUILD_STATIC_PIC}")
 message("-- option MUGGLE_CPP_BUILD_EXAMPLE ${MUGGLE_CPP_BUILD_EXAMPLE}")
 
-# include directories
-include_directories(
-	${CMAKE_CURRENT_LIST_DIR}
-)
-
 # mugglecpp
 set(muggle_c mugglec)
 set(muggle_cpp mugglecpp)
 muggle_add_project(${muggle_cpp} ${CMAKE_CURRENT_LIST_DIR}/muggle ${MUGGLE_CPP_LIB_TYPE})
+target_include_directories(${muggle_cpp} PUBLIC
+	${CMAKE_CURRENT_LIST_DIR}
+	${FETCHCONTENT_BASE_DIR}/mugglec-src
+	${FETCHCONTENT_BASE_DIR}/mugglec-build/generated)
 
 set_target_properties(${muggle_cpp} PROPERTIES 
 	VERSION ${MUGGLE_CPP_VERSION}
