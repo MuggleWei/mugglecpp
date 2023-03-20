@@ -55,7 +55,7 @@ set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
 FetchContent_Declare(
 	mugglec
 	GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
-	GIT_TAG v1.0.0-alpha.7
+	GIT_TAG v1.0.0
 	GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(mugglec)
