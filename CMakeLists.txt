@@ -31,45 +31,59 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # options
 if (BUILD_SHARED_LIBS)
-	option(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT ON)
+	set(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT ON)
 else(BUILD_SHARED_LIBS)
-	option(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT OFF)
+	set(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT OFF)
 endif()
 
 option(MUGGLE_CPP_BUILD_SHARED_LIB "mugglecpp build shared library" ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT})
 option(MUGGLE_CPP_BUILD_STATIC_PIC "mugglecpp build static library with position independent code flag" ON)
 option(MUGGLE_CPP_BUILD_EXAMPLE "mugglecpp build examples" OFF)
+option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp build with download mugglec source" OFF)
 
 ################################
 # mugglec
-include(FetchContent)
-set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
+if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
+	include(FetchContent)
+	set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
 
-set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
-set(MUGGLE_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT} CACHE BOOL "")
-set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
-set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
-set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
-set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
+	set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
+	set(MUGGLE_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT} CACHE BOOL "")
+	set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
+	set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
+	set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
+	set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
 
-FetchContent_Declare(
-	mugglec
-	GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
-	GIT_TAG v1.0.0
-	GIT_SHALLOW TRUE
-)
-FetchContent_MakeAvailable(mugglec)
+	message("# fetch mugglec")
+	FetchContent_Declare(
+		mugglec
+		GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
+		GIT_TAG v1.0.2
+		GIT_SHALLOW TRUE
+		)
+	FetchContent_MakeAvailable(mugglec)
+	set(MUGGLEC_LIBRARIES mugglec)
+else()
+	include(${CMAKE_CURRENT_LIST_DIR}/cmake/FindMuggleC.cmake)
+	if (NOT MUGGLEC_FOUND)
+		message(FATAL_ERROR "failed found mugglec")
+	endif()
+	message("-- Find mugglec")
+	message("-- mugglec include dir: ${MUGGLEC_INCLUDE_DIR}")
+	message("-- mugglec libraries: ${MUGGLEC_LIBRARIES}")
+endif()
+
+# cmake
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/muggle_utils.cmake)
 
 ################################
 # projects
-
-# cmake
-include(${FETCHCONTENT_BASE_DIR}/mugglec-src/cmake/muggle_utils.cmake)
-
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	set(MUGGLE_CPP_LIB_TYPE SHARED)
+	set(MUGGLE_CPP_USE_DLL ON)
 else()
 	set(MUGGLE_CPP_LIB_TYPE STATIC)
+	set(MUGGLE_CPP_USE_DLL OFF)
 endif()
 
 # version
@@ -91,15 +105,21 @@ message("-- mugglecpp version: ${MUGGLE_CPP_VERSION}")
 message("-- option MUGGLE_CPP_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB}")
 message("-- option MUGGLE_CPP_BUILD_STATIC_PIC ${MUGGLE_CPP_BUILD_STATIC_PIC}")
 message("-- option MUGGLE_CPP_BUILD_EXAMPLE ${MUGGLE_CPP_BUILD_EXAMPLE}")
+message("-- option MUGGLE_CPP_DOWNLOAD_MUGGLEC ${MUGGLE_CPP_DOWNLOAD_MUGGLEC}")
 
 # mugglecpp
-set(muggle_c mugglec)
 set(muggle_cpp mugglecpp)
+
+set(mugglecpp_generated_dir ${CMAKE_CURRENT_BINARY_DIR}/generated)
+configure_file(
+	"${CMAKE_CURRENT_LIST_DIR}/muggle/cpp/mugglecpp_config.h.in"
+	"${mugglecpp_generated_dir}/muggle/cpp/mugglecpp_config.h")
+
 muggle_add_project(${muggle_cpp} ${CMAKE_CURRENT_LIST_DIR}/muggle ${MUGGLE_CPP_LIB_TYPE})
 target_include_directories(${muggle_cpp} PUBLIC
 	${CMAKE_CURRENT_LIST_DIR}
-	${FETCHCONTENT_BASE_DIR}/mugglec-src
-	${FETCHCONTENT_BASE_DIR}/mugglec-build/generated)
+	${mugglecpp_generated_dir}
+	${MUGGLEC_INCLUDE_DIR})
 
 set_target_properties(${muggle_cpp} PROPERTIES 
 	VERSION ${MUGGLE_CPP_VERSION}
@@ -117,19 +137,24 @@ target_compile_definitions(${muggle_cpp} PUBLIC
 )
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	target_compile_definitions(${muggle_cpp}
-		PUBLIC MUGGLE_CPP_USE_DLL
+		#PUBLIC MUGGLE_CPP_USE_DLL
 		PRIVATE MUGGLE_CPP_EXPORTS 
 	)
 endif()
 
-target_link_libraries(${muggle_cpp} ${muggle_c})
-add_dependencies(${muggle_cpp} ${muggle_c})
+target_link_libraries(${muggle_cpp} ${MUGGLEC_LIBRARIES})
+if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
+	add_dependencies(${muggle_cpp} mugglec)
+endif()
 install(TARGETS ${muggle_cpp}
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib/static
 )
-muggle_install_headers(${CMAKE_CURRENT_LIST_DIR}/muggle include/muggle)
+muggle_install_headers(
+	"${CMAKE_CURRENT_LIST_DIR}/muggle" "include/muggle")
+muggle_install_headers(
+	"${mugglecpp_generated_dir}/muggle" "include/muggle")
 
 # functions
 function(add_example name folder)

@@ -14,14 +14,11 @@
 
 NS_MUGGLE_BEGIN
 
-#ifndef MUGGLE_CPP_SEMVER
-	#define MUGGLE_CPP_SEMVER ?.?.?
-#endif
 #define MUGGLE_CPP_COMPILRE_TIME __DATE__ " " __TIME__
 
 const char* mugglecpp_version()
 {
-	return MUGGLE_MACRO_STR(MUGGLE_CPP_SEMVER);
+	return MUGGLE_CPP_VERSION;
 }
 
 const char* mugglecpp_compile_time()

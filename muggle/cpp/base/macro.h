@@ -12,6 +12,7 @@
 #define MUGGLE_CPP_MACRO_H_
 
 #include "muggle/c/base/macro.h"
+#include "muggle/cpp/mugglecpp_config.h"
 
 // lib and dll
 #if MUGGLE_PLATFORM_WINDOWS && defined(MUGGLE_CPP_USE_DLL)
