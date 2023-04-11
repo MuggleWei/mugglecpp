@@ -1,0 +1,20 @@
+/******************************************************************************
+ *  @file         muggle_cpp_config.h.in
+ *  @author       Muggle Wei
+ *  @email        mugglewei@gmail.com
+ *  @date         2023-04-11
+ *  @copyright    Copyright 2023 Muggle Wei
+ *  @license      MIT License
+ *  @brief        muggle cpp config in
+ *****************************************************************************/
+
+#ifndef MUGGLE_CPP_CONFIG_IN_H_
+#define MUGGLE_CPP_CONFIG_IN_H_
+
+// mugglec @MUGGLE_CPP_VERSION@ config file
+
+#cmakedefine MUGGLE_CPP_VERSION "@MUGGLE_CPP_VERSION@"
+
+#cmakedefine MUGGLE_CPP_USE_DLL
+
+#endif // !MUGGLE_CPP_CONFIG_IN_H_

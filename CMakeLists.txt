@@ -68,8 +68,10 @@ include(${FETCHCONTENT_BASE_DIR}/mugglec-src/cmake/muggle_utils.cmake)
 
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	set(MUGGLE_CPP_LIB_TYPE SHARED)
+	set(MUGGLE_CPP_USE_DLL ON)
 else()
 	set(MUGGLE_CPP_LIB_TYPE STATIC)
+	set(MUGGLE_CPP_USE_DLL OFF)
 endif()
 
 # version
@@ -95,9 +97,16 @@ message("-- option MUGGLE_CPP_BUILD_EXAMPLE ${MUGGLE_CPP_BUILD_EXAMPLE}")
 # mugglecpp
 set(muggle_c mugglec)
 set(muggle_cpp mugglecpp)
+
+set(mugglecpp_generated_dir ${CMAKE_CURRENT_BINARY_DIR}/generated)
+configure_file(
+	"${CMAKE_CURRENT_LIST_DIR}/muggle/cpp/mugglecpp_config.h.in"
+	"${mugglecpp_generated_dir}/muggle/cpp/mugglecpp_config.h")
+
 muggle_add_project(${muggle_cpp} ${CMAKE_CURRENT_LIST_DIR}/muggle ${MUGGLE_CPP_LIB_TYPE})
 target_include_directories(${muggle_cpp} PUBLIC
 	${CMAKE_CURRENT_LIST_DIR}
+	${mugglecpp_generated_dir}
 	${FETCHCONTENT_BASE_DIR}/mugglec-src
 	${FETCHCONTENT_BASE_DIR}/mugglec-build/generated)
 
@@ -117,7 +126,7 @@ target_compile_definitions(${muggle_cpp} PUBLIC
 )
 if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	target_compile_definitions(${muggle_cpp}
-		PUBLIC MUGGLE_CPP_USE_DLL
+		#PUBLIC MUGGLE_CPP_USE_DLL
 		PRIVATE MUGGLE_CPP_EXPORTS 
 	)
 endif()
