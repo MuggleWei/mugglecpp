@@ -98,7 +98,7 @@ public:
 	 *     - on success, return dirname of path
 	 *     - on failed, return ""
 	 */
-	MUGGLE_C_EXPORT
+	MUGGLE_CPP_EXPORT
 	static std::string Norm(const char *path);
 };
 
