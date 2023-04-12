@@ -43,6 +43,7 @@ option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp build with download mugglec source
 
 ################################
 # mugglec
+set(mugglec_ver 1.0.2)
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	include(FetchContent)
 	set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
@@ -58,19 +59,17 @@ if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	FetchContent_Declare(
 		mugglec
 		GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
-		GIT_TAG v1.0.2
+		GIT_TAG v${mugglec_ver}
 		GIT_SHALLOW TRUE
 		)
 	FetchContent_MakeAvailable(mugglec)
 	set(MUGGLEC_LIBRARIES mugglec)
 else()
-	include(${CMAKE_CURRENT_LIST_DIR}/cmake/FindMuggleC.cmake)
-	if (NOT MUGGLEC_FOUND)
+	message("# find package mugglec")
+	find_package(mugglec ${mugglec_ver} REQUIRED)
+	if (NOT mugglec_FOUND)
 		message(FATAL_ERROR "failed found mugglec")
 	endif()
-	message("-- Find mugglec")
-	message("-- mugglec include dir: ${MUGGLEC_INCLUDE_DIR}")
-	message("-- mugglec libraries: ${MUGGLEC_LIBRARIES}")
 endif()
 
 # cmake
@@ -119,7 +118,7 @@ muggle_add_project(${muggle_cpp} ${CMAKE_CURRENT_LIST_DIR}/muggle ${MUGGLE_CPP_L
 target_include_directories(${muggle_cpp} PUBLIC
 	${CMAKE_CURRENT_LIST_DIR}
 	${mugglecpp_generated_dir}
-	${MUGGLEC_INCLUDE_DIR})
+)
 
 set_target_properties(${muggle_cpp} PROPERTIES 
 	VERSION ${MUGGLE_CPP_VERSION}
@@ -142,7 +141,7 @@ if (MUGGLE_CPP_BUILD_SHARED_LIB)
 	)
 endif()
 
-target_link_libraries(${muggle_cpp} ${MUGGLEC_LIBRARIES})
+target_link_libraries(${muggle_cpp} mugglec)
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	add_dependencies(${muggle_cpp} mugglec)
 endif()
