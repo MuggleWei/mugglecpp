@@ -1,4 +1,6 @@
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/mugglecppTargets.cmake")
+include(CMakeFindDependencyMacro)
+find_dependency(mugglec @mugglec_ver@)
 
+include("${CMAKE_CURRENT_LIST_DIR}/mugglecppTargets.cmake")
