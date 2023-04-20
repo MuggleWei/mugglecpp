@@ -116,9 +116,9 @@ configure_file(
 
 muggle_add_project(${muggle_cpp} ${CMAKE_CURRENT_LIST_DIR}/muggle ${MUGGLE_CPP_LIB_TYPE})
 target_include_directories(${muggle_cpp} PUBLIC
-	${CMAKE_CURRENT_LIST_DIR}
-	${mugglecpp_generated_dir}
-)
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+	$<BUILD_INTERFACE:${mugglecpp_generated_dir}>
+	$<INSTALL_INTERFACE:include>)
 
 set_target_properties(${muggle_cpp} PROPERTIES 
 	VERSION ${MUGGLE_CPP_VERSION}
@@ -145,15 +145,59 @@ target_link_libraries(${muggle_cpp} mugglec)
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	add_dependencies(${muggle_cpp} mugglec)
 endif()
+
+# install and add export configuration
+include(GNUInstallDirs)
+
+set(mugglecpp_export_dir "${CMAKE_INSTALL_LIBDIR}/cmake/mugglecpp")
 install(TARGETS ${muggle_cpp}
-	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib/static
-)
+	EXPORT mugglecppTargets
+	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(EXPORT mugglecppTargets
+	FILE mugglecppTargets.cmake
+	DESTINATION ${mugglecpp_export_dir})
 muggle_install_headers(
 	"${CMAKE_CURRENT_LIST_DIR}/muggle" "include/muggle")
 muggle_install_headers(
 	"${mugglecpp_generated_dir}/muggle" "include/muggle")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+	"${CMAKE_CURRENT_LIST_DIR}/cmake/mugglecppConfig.cmake.in"
+    "${mugglecpp_generated_dir}/mugglecppConfig.cmake"
+    INSTALL_DESTINATION ${mugglecpp_export_dir}
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+write_basic_package_version_file(
+    "${mugglecpp_generated_dir}/mugglecppConfigVersion.cmake"
+	VERSION ${MUGGLE_CPP_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+install(FILES
+	"${mugglecpp_generated_dir}/mugglecppConfig.cmake"
+	"${mugglecpp_generated_dir}/mugglecppConfigVersion.cmake"
+	DESTINATION ${mugglecpp_export_dir})
+
+# configure and install pkgconfig file
+configure_file(
+	"${CMAKE_CURRENT_LIST_DIR}/cmake/mugglecpp.pc.in"
+	"${mugglecpp_generated_dir}/mugglecpp.pc" @ONLY)
+install(FILES
+	"${mugglecpp_generated_dir}/mugglecpp.pc"
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+
+# cpack
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+set(CPACK_PACKAGE_VERSION_MAJOR ${MUGGLE_CPP_VER_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${MUGGLE_CPP_VER_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${MUGGLE_CPP_VER_PATCH})
+set(CPACK_PACKAGE_CONTACT "Muggle Wei <mugglewei@gmail.com>")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/MuggleWei/mugglecpp")
+include(CPack)
 
 # functions
 function(add_example name folder)
