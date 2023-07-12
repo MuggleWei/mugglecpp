@@ -32,43 +32,30 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # options
-if (BUILD_SHARED_LIBS)
-	set(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT ON)
-else(BUILD_SHARED_LIBS)
-	set(MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT OFF)
-endif()
-
-option(MUGGLE_CPP_BUILD_SHARED_LIB "mugglecpp build shared library" ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT})
+option(BUILD_SHARED_LIBS "Build shared or static library" ON)
 option(MUGGLE_CPP_BUILD_STATIC_PIC "mugglecpp build static library with position independent code flag" ON)
 option(MUGGLE_CPP_BUILD_EXAMPLE "mugglecpp build examples" OFF)
 option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp build with download mugglec source" OFF)
 
 ################################
 # mugglec
-set(mugglec_ver 1.0.2)
+set(DEPS_MUGGLEC_VER "1.2.4" CACHE STRING "mugglec version")
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	include(FetchContent)
 	set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
-
-	set(MUGGLE_BUILD_TRACE OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_SHARED_LIB ${MUGGLE_CPP_BUILD_SHARED_LIB_DEFAULT} CACHE BOOL "")
-	set(MUGGLE_BUILD_STATIC_PIC ON CACHE BOOL "")
-	set(MUGGLE_BUILD_BENCHMARK OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_TESTING OFF CACHE BOOL "")
-	set(MUGGLE_BUILD_EXAMPLE OFF CACHE BOOL "")
 
 	message("# fetch mugglec")
 	FetchContent_Declare(
 		mugglec
 		GIT_REPOSITORY https://github.com/MuggleWei/mugglec.git
-		GIT_TAG v${mugglec_ver}
+		GIT_TAG v${DEPS_MUGGLEC_VER}
 		GIT_SHALLOW TRUE
 		)
 	FetchContent_MakeAvailable(mugglec)
 	set(MUGGLEC_LIBRARIES mugglec)
 else()
 	message("# find package mugglec")
-	find_package(mugglec ${mugglec_ver} REQUIRED)
+	find_package(mugglec ${DEPS_MUGGLEC_VER} REQUIRED)
 	if (NOT mugglec_FOUND)
 		message(FATAL_ERROR "failed found mugglec")
 	endif()
@@ -79,7 +66,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/muggle_utils.cmake)
 
 ################################
 # projects
-if (MUGGLE_CPP_BUILD_SHARED_LIB)
+if (BUILD_SHARED_LIBS)
 	set(MUGGLE_CPP_LIB_TYPE SHARED)
 	set(MUGGLE_CPP_USE_DLL ON)
 else()
