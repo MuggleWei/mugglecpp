@@ -1,8 +1,8 @@
 name: mugglecpp
 variables:
   - build_type: release
-  - mugglecpp_tag: v1.0.5
-  - mugglec_tag: v1.0.2
+  - mugglecpp_tag: v1.0.6
+  - mugglec_tag: v1.2.4
 source:
   maintainer: mugglewei
   name: mugglecpp
@@ -23,7 +23,7 @@ jobs:
             -DBUILD_SHARED_LIBS=ON \
             -DCMAKE_INSTALL_PREFIX=${HPB_OUTPUT_DIR} \
             -DCMAKE_PREFIX_PATH=${HPB_DEPS_DIR};
-          cmake --build ${HPB_BUILD_DIR} --target install;
+          cmake --build ${HPB_BUILD_DIR} --config ${build_type} --target install;
   package:
     needs: [build]
     steps:
