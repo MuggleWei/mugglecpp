@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0.2)
+cmake_minimum_required (VERSION 3.18.6)
 project(mugglecpp)
 
 # set compile parameter
@@ -39,7 +39,7 @@ option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp build with download mugglec source
 
 ################################
 # mugglec
-set(DEPS_MUGGLEC_VER "1.2.4" CACHE STRING "mugglec version")
+set(DEPS_MUGGLEC_VER "1.2.5" CACHE STRING "mugglec version")
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	include(FetchContent)
 	set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
