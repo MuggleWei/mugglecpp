@@ -22,10 +22,10 @@ class NetEventHandle
 {
 public:
 	MUGGLE_CPP_EXPORT
-	NetEventHandle() = default;
+	NetEventHandle();
 
 	MUGGLE_CPP_EXPORT
-	virtual ~NetEventHandle() = default;
+	virtual ~NetEventHandle();
 
 	MUGGLE_CPP_EXPORT
 	virtual void OnAddCtx(NetEventLoop *evloop, SocketContext *ctx);
