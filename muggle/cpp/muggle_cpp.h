@@ -43,5 +43,6 @@
 #include "muggle/cpp/os/dl.h"
 #include "muggle/cpp/os/os.h"
 #include "muggle/cpp/os/path.h"
+#include "muggle/cpp/os/endian.h"
 
 #endif /* ifndef MUGGLE_CPP_H_ */
