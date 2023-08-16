@@ -3,19 +3,19 @@
 
 NS_MUGGLE_BEGIN
 
-void Endian::Swap(uint16_t &val)
+uint16_t Endian::Swap(uint16_t val)
 {
-	MUGGLE_ENDIAN_SWAP_16(val);
+	return MUGGLE_ENDIAN_SWAP_16(val);
 }
 
-void Endian::Swap(uint32_t &val)
+uint32_t Endian::Swap(uint32_t val)
 {
-	MUGGLE_ENDIAN_SWAP_32(val);
+	return MUGGLE_ENDIAN_SWAP_32(val);
 }
 
-void Endian::Swap(uint64_t &val)
+uint64_t Endian::Swap(uint64_t val)
 {
-	MUGGLE_ENDIAN_SWAP_64(val);
+	return MUGGLE_ENDIAN_SWAP_64(val);
 }
 
 NS_MUGGLE_END
