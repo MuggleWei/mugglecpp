@@ -19,13 +19,13 @@ NS_MUGGLE_BEGIN
 class Endian {
 public:
 	MUGGLE_CPP_EXPORT
-	static void Swap(uint16_t &val);
+	static uint16_t Swap(uint16_t val);
 
 	MUGGLE_CPP_EXPORT
-	static void Swap(uint32_t &val);
+	static uint32_t Swap(uint32_t val);
 
 	MUGGLE_CPP_EXPORT
-	static void Swap(uint64_t &val);
+	static uint64_t Swap(uint64_t val);
 };
 
 NS_MUGGLE_END
