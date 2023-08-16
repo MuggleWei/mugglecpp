@@ -26,6 +26,21 @@ public:
 
 	MUGGLE_CPP_EXPORT
 	static uint64_t Swap(uint64_t val);
+
+	MUGGLE_CPP_EXPORT
+	static int16_t Swap(int16_t val);
+
+	MUGGLE_CPP_EXPORT
+	static int32_t Swap(int32_t val);
+
+	MUGGLE_CPP_EXPORT
+	static int64_t Swap(int64_t val);
+
+	MUGGLE_CPP_EXPORT
+	static float Swap(float val);
+
+	MUGGLE_CPP_EXPORT
+	static double Swap(double val);
 };
 
 NS_MUGGLE_END
