@@ -1,7 +1,7 @@
 name: mugglecpp
 variables:
   - build_type: release
-  - mugglecpp_tag: v1.2.1
+  - mugglecpp_tag: v1.2.2
   - mugglec_tag: v1.3.0
 source:
   maintainer: mugglewei
