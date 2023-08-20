@@ -39,7 +39,7 @@ option(MUGGLE_CPP_DOWNLOAD_MUGGLEC "mugglecpp build with download mugglec source
 
 ################################
 # mugglec
-set(DEPS_MUGGLEC_VER "1.2.6" CACHE STRING "mugglec version")
+set(DEPS_MUGGLEC_VER "1.3.0" CACHE STRING "mugglec version")
 if (MUGGLE_CPP_DOWNLOAD_MUGGLEC)
 	include(FetchContent)
 	set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
