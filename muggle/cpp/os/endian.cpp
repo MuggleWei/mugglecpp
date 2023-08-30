@@ -20,17 +20,23 @@ uint64_t Endian::Swap(uint64_t val)
 
 int16_t Endian::Swap(int16_t val)
 {
-	return MUGGLE_ENDIAN_SWAP_16(val);
+	// NOTE: use unsigned integer to avoid of UB and implementation-defined
+	uint16_t u16 = Endian::Swap(*(uint16_t*)&val);
+	return *(int16_t*)&u16;
 }
 
 int32_t Endian::Swap(int32_t val)
 {
-	return MUGGLE_ENDIAN_SWAP_32(val);
+	// NOTE: use unsigned integer to avoid of UB and implementation-defined
+	uint32_t u32 = Endian::Swap(*(uint32_t*)&val);
+	return *(int32_t*)&u32;
 }
 
 int64_t Endian::Swap(int64_t val)
 {
-	return MUGGLE_ENDIAN_SWAP_64(val);
+	// NOTE: use unsigned integer to avoid of UB and implementation-defined
+	uint64_t u64 = Endian::Swap(*(uint64_t*)&val);
+	return *(int64_t*)&u64;
 }
 
 float Endian::Swap(float val)
